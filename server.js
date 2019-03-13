@@ -32,3 +32,35 @@ app.get('/api/v1/skins', (request, response) => {
     });
 });
 
+app.get('/api/v1/champions/:id', (request, response) => {
+  database('champions').where('id', request.params.id).select()
+    .then(champions => {
+      if (champions.length) {
+        response.status(200).json(champions);
+      } else {
+        response.status(404).json({
+          error: `Could not find champion with id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.get('/api/v1/skins/:id', (request, response) => {
+  database('skins').where('id', request.params.id).select()
+    .then(skins => {
+      if (skins.length) {
+        response.status(200).json(skins);
+      } else {
+        response.status(404).json({
+          error: `Could not find skin with id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
