@@ -14,16 +14,6 @@ app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 });
 
-// app.get('/api/v1/champions', (request, response) => {
-//   database('champions').select()
-//     .then((champions) => {
-//       response.status(200).json(champions);
-//     })
-//     .catch((error) => {
-//       response.status(500).json({ error });
-//     });
-// });
-
 app.get('/api/v1/champions', async (request, response) => {
   try {
     const currentChampions = await database('champions').select()
@@ -33,16 +23,6 @@ app.get('/api/v1/champions', async (request, response) => {
   }
 });
 
-// app.get('/api/v1/skins', (request, response) => {
-//   database('skins').select()
-//     .then((skins) => {
-//       response.status(200).json(skins);
-//     })
-//     .catch((error) => {
-//       response.status(500).json({ error });
-//     });
-// });
-
 app.get('/api/v1/skins', async (request, response) => {
   try {
     const currentSkins = await database('skins').select()
@@ -51,22 +31,6 @@ app.get('/api/v1/skins', async (request, response) => {
     return response.status(500).json({ error });
   }
 });
-
-// app.get('/api/v1/champions/:id', (request, response) => {
-//   database('champions').where('id', request.params.id).select()
-//     .then(champions => {
-//       if (champions.length) {
-//         response.status(200).json(champions);
-//       } else {
-//         response.status(404).json({
-//           error: `Could not find champion with id ${request.params.id}`
-//         });
-//       }
-//     })
-//     .catch(error => {
-//       response.status(500).json({ error });
-//     });
-// });
 
 app.get('/api/v1/champions/:id', async (request, response) => {
   try {
@@ -83,22 +47,6 @@ app.get('/api/v1/champions/:id', async (request, response) => {
   }
 });
 
-// app.get('/api/v1/skins/:id', (request, response) => {
-//   database('skins').where('id', request.params.id).select()
-//     .then(skins => {
-//       if (skins.length) {
-//         response.status(200).json(skins);
-//       } else {
-//         response.status(404).json({
-//           error: `Could not find skin with id ${request.params.id}`
-//         });
-//       }
-//     })
-//     .catch(error => {
-//       response.status(500).json({ error });
-//     });
-// });
-
 app.get('/api/v1/skins/:id', async (request, response) => {
   try {
     const skin = await database('skins').where('id', request.params.id).select()
@@ -113,24 +61,6 @@ app.get('/api/v1/skins/:id', async (request, response) => {
     response.status(500).json({ error });
   }
 });
-
-// app.post('/api/v1/champions', (request, response) => {
-//   const champion = request.body;
-//   for (let requiredParameter of ['name', 'title']) {
-//     if (!champion[requiredParameter]) {
-//       return response
-//         .status(422)
-//         .send({ error: `Expected format: { name: <String>, title: <String> }. You're missing a "${requiredParameter}" property.` });
-//     }
-//   }
-//   database('champions').insert(champion, 'id')
-//     .then(champion => {
-//       response.status(201).json({ id: champion[0] })
-//     })
-//     .catch(error => {
-//       response.status(500).json({ error });
-//     });
-// });
 
 app.post('/api/v1/champions', async (request, response) => {
   const champion = request.body;
@@ -148,19 +78,6 @@ app.post('/api/v1/champions', async (request, response) => {
     return response.status(500).json({ error });
   }
 });
-
-
-
-// app.post('/api/v1/skins', (request, response) => {
-//   const skin = request.body;
-
-//   for (let requiredParameter of ['skin_name', 'chroma', 'champion']) {
-//     if (!skin[requiredParameter]) {
-//       return response
-//         .status(422)
-//         .send({ error: `Expected format: { skin_name: <String>, chroma: <Boolean>, champion: <String> }. You're missing a "${requiredParameter}" property.` });
-//     }
-//   }
 
   app.post('/api/v1/skins', async (request, response) => {
     const skin = request.body;
@@ -207,7 +124,3 @@ app.delete('/api/v1/champions/:championId', async(request, response) => {
     response.status(500).json('Something wrong');
   }
 });
-
-
-//{"name": "Matt3", "title": "yes"}
-//{"skin_name": "new", "chroma": "true", "champion_id": "37"}
