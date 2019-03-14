@@ -149,7 +149,7 @@ app.post('/api/v1/champions', async (request, response) => {
   }
 });
 
-//{"skin_name": "new", "chroma": "true", "champion_id": "37"}
+
 
 // app.post('/api/v1/skins', (request, response) => {
 //   const skin = request.body;
@@ -186,32 +186,28 @@ app.post('/api/v1/champions', async (request, response) => {
     }
 });
 
-app.delete('/api/v1/champions/:champion', (request, response) => {
-  database('champions').where('name', request.params.champion).select()
-    .then(champions => {
-
-      if (champions.length) {
-        console.log(champions)
-        database('champions').where('name', request.params.champion).del()
-          .then(champion => {
-            database('skins').where('champion_id', champion[0].id).select()
-              .then(skins => {
-                if (skins.length) {
-                  database('skins').where('champion_id', champion[0].id).del()
-                } else {
-                  response.status(201).json({ id: champion[0].id })
-                }
-              })
-          })
-      } else {
-        response.status(404).json({
-          error: `Could not find champion_id associated with champion ${request.params.champion}`
-        });
-      }
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    });
+app.delete('/api/v1/champions/:championId', async(request, response) => {
+  const championId = request.params.championId
+  try {
+    const championToDelete = await database('champions').where('id', championId).select()
+    const skinsToDelete = await database('skins').where('champion_id', championId).select()
+    if(championToDelete.length && skinsToDelete.length) {
+      await database('champions').where('id', championId).del();
+      await database('skins').where('champion_id', championId).del();
+      return response.sendStatus(204)
+    } else if(championToDelete.length) {
+      await database('champions').where('id', championId).del()
+      return response.send(204).json('hello')
+    } else {
+      response.status(404).json({
+        error: `Could not find champion_id associated with champion ${championId}`
+      });
+    }
+  } catch(error) {
+    response.status(500).json('Something wrong');
+  }
 });
 
 
+//{"name": "Matt3", "title": "yes"}
+//{"skin_name": "new", "chroma": "true", "champion_id": "37"}
